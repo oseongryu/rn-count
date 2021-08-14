@@ -36,25 +36,87 @@ interface Props {
   title?: string;
   initValue: number;
 }
+interface State {
+  count: number;
+  error: boolean;
+}
 
-const Counter = ({ title, initValue }: Props) => {
-  const [count, setCount] = useState<number>(initValue);
+class Counter extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    console.log('constructor');
 
-  return (
-    <Container>
-      {title && (
-        <TitleContainer>
-          <TitleLabel>{title}</TitleLabel>
-        </TitleContainer>
-      )}
-      <CountContainer>
-        <CountLabel>{count}</CountLabel>
-      </CountContainer>
-      <ButtonContainer>
-        <Button iconName="plus" onPress={() => setCount(count + 1)} />
-        <Button iconName="minus" onPress={() => setCount(count - 1)} />
-      </ButtonContainer>
-    </Container>
-  );
-};
+    this.state = {
+      count: props.initValue,
+      error: false,
+    };
+  }
+
+  render() {
+    console.log('render');
+    const { title } = this.props;
+    const { count, error } = this.state;
+    return (
+      <Container>
+        {!error && (
+          <>
+            {title && (
+              <TitleContainer>
+                <TitleLabel>{title}</TitleLabel>
+              </TitleContainer>
+            )}
+            <CountContainer>
+              <CountLabel>{count}</CountLabel>
+            </CountContainer>
+            <ButtonContainer>
+              <Button
+                iconName="plus"
+                onPress={() => this.setState({ count: count + 1 })}
+              />
+              <Button
+                iconName="minus"
+                onPress={() => this.setState({ count: count - 1 })}
+              />
+            </ButtonContainer>
+          </>
+        )}
+      </Container>
+    );
+  }
+
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+    console.log('getDerivedStateFromProps');
+
+    return null;
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+  }
+
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    console.log('shouldComponentUpdate');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps: Props, prevState: State) {
+    console.log('getSnapshotBeforeUpdate');
+
+    return null;
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State, snapshot: null) {
+    console.log('componentDidUpdate');
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    this.setState({
+      error: true,
+    });
+  }
+}
 export default Counter;
